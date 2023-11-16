@@ -17,13 +17,21 @@
           };
           myRustBuild = rustPlatform.buildRustPackage {
             pname =
-              "rust_nix_blog"; # make this what ever your cargo.toml package.name is
+              "nix-rust"; # make this what ever your cargo.toml package.name is
             version = "0.1.0";
             src = ./.; # the folder with the cargo.toml
             cargoLock.lockFile = ./Cargo.lock;
           };
+          dockerImage = pkgs.dockerTools.buildImage {
+            name = "nix-rust";
+            config = { Cmd = [ "${myRustBuild}/bin/nix-rust" ]; };
+          };
         in {
-          defaultPackage = myRustBuild;
+          packages = {
+            rustPackage = myRustBuild;
+            docker = dockerImage;
+          };
+          defaultPackage = dockerImage;
           devShell = pkgs.mkShell {
             buildInputs =
               [ (rustVersion.override { extensions = [ "rust-src" ]; }) ];
