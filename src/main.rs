@@ -10,6 +10,6 @@ fn main() {
   println!("add(1, 2) = {}", add(1,2));
 }
 
-fn add(a:u32, b:u32) ->u32{
+fn add(a:u32, b:u32) -> u32 {
   return a+b;
 }
